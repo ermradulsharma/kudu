@@ -93,5 +93,10 @@
     "undici": "6.28.0",
     "vite": "$vite",
     "@vitejs/plugin-react": "$@vitejs/plugin-react"
+  },
+  "allowScripts": {
+    "better-sqlite3": true,
+    "esbuild": true,
+    "electron-winstaller": true
   }
 }

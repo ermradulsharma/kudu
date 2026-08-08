@@ -22,7 +22,7 @@ describe('win32 elevation', () => {
 
     expect(result).toBe(true)
     expect(execFileSyncMock).toHaveBeenCalledWith(
-      'net', ['session'], { stdio: 'ignore', timeout: 5000 }
+      'net', ['session'], { stdio: 'ignore', timeout: 3000, windowsHide: true }
     )
   })
 

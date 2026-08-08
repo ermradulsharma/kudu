@@ -1425,7 +1425,7 @@ async function handleMetricsServer(args: string[], ctx: CliContext): Promise<voi
 
   const shutdown = (): void => {
     server.close()
-    app.exit(ExitCode.SUCCESS)
+    process.exitCode = ExitCode.SUCCESS; app.quit()
   }
   process.on('SIGTERM', shutdown)
   process.on('SIGINT', shutdown)
@@ -1556,8 +1556,8 @@ async function runLegacyScanClean(categories: string[], doClean: boolean, ctx: C
 export async function runCli(): Promise<void> {
   const parsed = parseCliArgs(process.argv)
 
-  if (parsed.help) { printHelp(); app.exit(ExitCode.SUCCESS); return }
-  if (parsed.version) { log(`Kudu v${app.getVersion()}`); app.exit(ExitCode.SUCCESS); return }
+  if (parsed.help) { printHelp(); process.exitCode = ExitCode.SUCCESS; app.quit(); return }
+  if (parsed.version) { log(`Kudu v${app.getVersion()}`); process.exitCode = ExitCode.SUCCESS; app.quit(); return }
 
   const { ctx } = parsed
 
@@ -1566,7 +1566,7 @@ export async function runCli(): Promise<void> {
   if (cliArgs.includes('--verbose') && (cliArgs.includes('--quiet') || cliArgs.includes('-q'))) {
     if (ctx.json) log(JSON.stringify({ error: 'invalid_args', message: '--verbose and --quiet are mutually exclusive' }))
     else process.stderr.write('Error: --verbose and --quiet are mutually exclusive.\n')
-    app.exit(ExitCode.INVALID_ARGS)
+    process.exitCode = ExitCode.INVALID_ARGS; app.quit()
     return
   }
 
@@ -1582,7 +1582,7 @@ export async function runCli(): Promise<void> {
     }
     const doClean = parsed.hasCleanFlag || parsed.command === 'clean'
     const exitCode = await runLegacyScanClean(categories, doClean, ctx)
-    app.exit(exitCode)
+    process.exitCode = exitCode; app.quit()
     return
   }
 
@@ -1616,16 +1616,16 @@ export async function runCli(): Promise<void> {
           log(`Unknown command: ${parsed.command}`)
           log('Run kudu --cli --help for usage information.')
         }
-        app.exit(ExitCode.UNKNOWN_COMMAND)
+        process.exitCode = ExitCode.UNKNOWN_COMMAND; app.quit()
         return
     }
-    app.exit(exitCode ?? ExitCode.SUCCESS)
+    process.exitCode = exitCode ?? ExitCode.SUCCESS; app.quit()
   } catch (err: any) {
     if (ctx.json) {
       log(JSON.stringify({ error: err.message }))
     } else {
       process.stderr.write(`Error: ${err.message}\n`)
     }
-    app.exit(ExitCode.GENERAL_ERROR)
+    process.exitCode = ExitCode.GENERAL_ERROR; app.quit()
   }
 }

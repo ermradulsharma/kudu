@@ -83,7 +83,7 @@
         "react-i18next": "^17.0.11",
         "react-router-dom": "^7.18.2",
         "recharts": "^3.10.1",
-        "sonner": "^2.0.7",
+        "sonner": "^2.0.8",
         "systeminformation": "^5.33.1",
         "tailwind-merge": "^3.6.0",
         "zustand": "^5.0.14"
